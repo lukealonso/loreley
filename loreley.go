@@ -7,8 +7,6 @@ import (
 	"regexp"
 	"strings"
 	"text/template"
-
-	"golang.org/x/crypto/ssh/terminal"
 )
 
 const (
@@ -406,15 +404,7 @@ func Compile(
 	}
 
 	style.Template = template
-
-	switch Colorize {
-	case ColorizeNever:
-		style.NoColors = true
-
-	case ColorizeOnTTY:
-		style.NoColors = !HasTTY(TTYStream)
-
-	}
+	style.NoColors = false
 
 	return style, nil
 }
@@ -446,9 +436,4 @@ func CompileWithReset(
 // TrimStyles removes all escape codes from the given string.
 func TrimStyles(input string) string {
 	return CodeRegexp.ReplaceAllLiteralString(input, ``)
-}
-
-// HasTTY will return true if specified file descriptor is bound to a TTY.
-func HasTTY(fd int) bool {
-	return terminal.IsTerminal(fd)
 }
